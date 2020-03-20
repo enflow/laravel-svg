@@ -6,6 +6,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use Enflow\Svg\Exceptions\SvgInvalidException;
+use Enflow\Svg\Exceptions\SvgMustBeRendered;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
@@ -95,6 +96,8 @@ class Svg implements Htmlable, Renderable
 
     public function inner()
     {
+        $this->ensureRendered();
+
         $node = $this->dom()->getElementsByTagName("svg")->item(0);
 
         return array_reduce(
@@ -112,6 +115,8 @@ class Svg implements Htmlable, Renderable
 
     public function viewBox()
     {
+        $this->ensureRendered();
+
         $viewBox = $this->dom()->getElementsByTagName("svg")->item(0)->getAttribute('viewBox');
 
         $viewBoxParts = array_map(static function (string $part) {
@@ -157,5 +162,12 @@ class Svg implements Htmlable, Renderable
         @$dom->loadXML($this->contents);
 
         return $dom;
+    }
+
+    private function ensureRendered()
+    {
+        if (empty($this->contents)) {
+            throw SvgMustBeRendered::create($this);
+        }
     }
 }

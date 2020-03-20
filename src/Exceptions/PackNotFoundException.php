@@ -2,6 +2,7 @@
 
 namespace Enflow\Svg\Exceptions;
 
+use Enflow\Svg\Pack;
 use Exception;
 
 class PackNotFoundException extends Exception implements SvgException

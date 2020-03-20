@@ -12,13 +12,10 @@
         "php": "^7.4",
         "illuminate/support": "^7.0"
     },
-    "autoload": {
-        "psr-4": {
-            "Enflow\\Svg\\": "src/"
-        },
-        "files": [
-            "src/helpers.php"
-        ]
+    "require-dev": {
+        "orchestra/testbench": "^5.1",
+        "phpunit/phpunit": "^8.1",
+        "spatie/phpunit-snapshot-assertions": "^4.0"
     },
     "extra": {
         "laravel": {
@@ -27,7 +24,17 @@
             ]
         }
     },
-    "require-dev": {
-        "orchestra/testbench": "^5.1"
+    "autoload": {
+        "psr-4": {
+            "Enflow\\Svg\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Enflow\\Svg\\Test\\": "tests"
+        }
     }
 }
