@@ -17,6 +17,9 @@
         "phpunit/phpunit": "^8.1",
         "spatie/phpunit-snapshot-assertions": "^4.0"
     },
+    "config": {
+        "sort-packages": true
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -36,5 +39,8 @@
         "psr-4": {
             "Enflow\\Svg\\Test\\": "tests"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }

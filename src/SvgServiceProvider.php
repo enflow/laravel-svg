@@ -3,6 +3,7 @@
 namespace Enflow\Svg;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class SvgServiceProvider extends ServiceProvider
 {
@@ -16,9 +17,14 @@ class SvgServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'svg');
 
         $this->app->singleton(Spritesheet::class);
+
+        $this->registerBladeTag();
     }
 
-    public function register()
+    public function registerBladeTag()
     {
+        Blade::directive('svg', function ($expression) {
+            return "<?php echo svg($expression)->toHtml(); ?>";
+        });
     }
 }
