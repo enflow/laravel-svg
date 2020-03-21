@@ -24,7 +24,7 @@ class Svg implements Htmlable, Renderable
     {
         $this->name = $name;
 
-        $this->attributes = collect(); // PHP 7.4 doesn't support defaults by function yet.
+        $this->attributes = collect(); // PHP 7.4 doesn't support defaults by function.
     }
 
     public function id(): string

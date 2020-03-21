@@ -2,19 +2,20 @@
 
 namespace Enflow\Svg;
 
-use Enflow\Svg\Exceptions\PackNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Enflow\Svg\Exceptions\PackNotFoundException;
 
 class Pack
 {
     public string $name;
-    public array $paths;
+    public array $paths = [];
 
     /**
-     * Auto size on Viewbox means that the SVG will have an automatically generated width based on the viewport width and height.
-     * The most common use case is when using the Font Awesome 5 set.
+     * Auto size on viewbox means that the SVG will have an automatically generated width based on the viewport width and height.
      * We'll automatically calculate the width, and add a CSS class to set the vertical alignment and height to a sensible default as well.
+     *
+     * The most common use case is when using the Font Awesome 5 set.
      *
      * @var bool
      */
