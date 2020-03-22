@@ -59,7 +59,7 @@ class Svg implements Htmlable, Renderable
     {
         $this->prepareForRendering();
 
-        app(Spritesheet::class)->add($this);
+        app(Spritesheet::class)->queue($this);
 
         return vsprintf('<svg%s %s><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#%s"></use></svg>', [
             $this->pack->autoSizeOnViewBox ? sprintf(' width="%sem"', round($this->viewBox()[2] / $this->viewBox()[3], 4)) : '',

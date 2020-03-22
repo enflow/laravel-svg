@@ -25,15 +25,24 @@ class InjectSvgSpritesheet
             return $response;
         }
 
-        return $this->injectSpritesheet($response);
+        return $this->injectStylesheet($this->injectSpritesheet($response));
+    }
+
+    private function injectStylesheet(SymfonyBaseResponse $response): SymfonyBaseResponse
+    {
+        if (Str::contains($content = $response->getContent(), '<head>')) {
+            // We insert it in the top part of the <head> as then custom CSS will overrule ours
+            $response->setContent(str_replace('<head>', '<head>' . $this->stylesheet(), $content));
+        }
+
+        return $response;
     }
 
     private function injectSpritesheet(SymfonyBaseResponse $response): SymfonyBaseResponse
     {
         if (Str::contains($content = $response->getContent(), '<head>')) {
-            // We insert it in the top part of the <head> as then custom CSS will overrule ours
-            $content = str_replace('<head>', '<head>' . $this->spritesheet(), $content);
-            $response->setContent($content);
+            // We insert it in the bottom part of the <head> as then the CSS can load first before the SVG body is sent.
+            $response->setContent(str_replace('</head>', $this->spritesheet() . '</head>', $content));
         }
 
         return $response;
@@ -42,5 +51,12 @@ class InjectSvgSpritesheet
     private function spritesheet(): string
     {
         return app(Spritesheet::class)->toHtml();
+    }
+
+    private function stylesheet()
+    {
+        if (app(Spritesheet::class)->count()) {
+            return '<style>.svg-auto-size {display: inline-block;font-size: inherit;height: 1em;overflow: visible;vertical-align: -.125em;}</style>';
+        }
     }
 }
