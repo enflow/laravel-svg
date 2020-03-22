@@ -2,6 +2,7 @@
 
 namespace Enflow\Svg;
 
+use Enflow\Svg\Middleware\InjectSvgSpritesheet;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 
@@ -19,12 +20,21 @@ class SvgServiceProvider extends ServiceProvider
         $this->app->singleton(Spritesheet::class);
 
         $this->registerBladeTag();
+
+        $this->registerMiddleware();
     }
 
-    public function registerBladeTag()
+    private function registerBladeTag()
     {
         Blade::directive('svg', function ($expression) {
             return "<?php echo svg($expression)->toHtml(); ?>";
         });
+    }
+
+    private function registerMiddleware()
+    {
+        if (config('svg.register_middleware_automatically', true)) {
+            $this->app['router']->pushMiddlewareToGroup('web', InjectSvgSpritesheet::class);
+        }
     }
 }
