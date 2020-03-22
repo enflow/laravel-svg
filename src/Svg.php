@@ -39,7 +39,7 @@ class Svg implements Htmlable, Renderable
      */
     public function pack($pack): self
     {
-        if (is_string($pack)) {
+        if (!$pack instanceof Pack) {
             $pack = Pack::get($pack);
         }
 
@@ -119,9 +119,7 @@ class Svg implements Htmlable, Renderable
 
         $viewBox = $this->dom()->getElementsByTagName("svg")->item(0)->getAttribute('viewBox');
 
-        $viewBoxParts = array_map(static function (string $part) {
-            return intval($part);
-        }, explode(' ', $viewBox));
+        $viewBoxParts = array_map('intval', explode(' ', $viewBox));
 
         if (count($viewBoxParts) !== 4) {
             throw SvgInvalidException::viewportInvalid($this, $viewBox);
