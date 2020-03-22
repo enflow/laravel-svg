@@ -32,7 +32,7 @@ class InjectSvgSpritesheet
     {
         if (Str::contains($content = $response->getContent(), '<head>')) {
             // We insert it in the top part of the <head> as then custom CSS will overrule ours
-            $content = str_replace('<head>', $this->spritesheet() . '<head>', $content);
+            $content = str_replace('<head>', '<head>' . $this->spritesheet(), $content);
             $response->setContent($content);
         }
 
