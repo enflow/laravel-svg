@@ -98,10 +98,8 @@ class Svg implements Htmlable, Renderable
     {
         $this->ensureRendered();
 
-        $node = $this->dom()->getElementsByTagName("svg")->item(0);
-
         return array_reduce(
-            iterator_to_array($node->childNodes),
+            iterator_to_array($this->dom()->childNodes),
             function ($carry, DOMNode $child) {
                 // Set default fill if not already defined.
                 if ($child instanceof DOMElement && !$child->hasAttribute('fill')) {
@@ -117,7 +115,7 @@ class Svg implements Htmlable, Renderable
     {
         $this->ensureRendered();
 
-        $viewBox = $this->dom()->getElementsByTagName("svg")->item(0)->getAttribute('viewBox');
+        $viewBox = $this->dom()->getAttribute('viewBox');
 
         $viewBoxParts = array_map('intval', explode(' ', $viewBox));
 
@@ -136,7 +134,7 @@ class Svg implements Htmlable, Renderable
             return sprintf(' width="%sem"', round($this->viewBox()[2] / $this->viewBox()[3], 4));
         }
 
-        $svgDom = $this->dom()->getElementsByTagName("svg")->item(0);
+        $svgDom = $this->dom();
 
         [$width, $height] = [$svgDom->getAttribute('width'), $svgDom->getAttribute('height')];
 
@@ -169,12 +167,18 @@ class Svg implements Htmlable, Renderable
             ->implode(' ');
     }
 
-    private function dom()
+    private function dom(): DOMNode
     {
+        static $domCache;
+
+        if (!empty($domCache[$this->id()])) {
+            return $domCache[$this->id()];
+        }
+
         $dom = new DOMDocument();
         @$dom->loadXML($this->contents);
 
-        return $dom;
+        return $domCache[$this->id()] = $dom->getElementsByTagName("svg")->item(0);
     }
 
     private function ensureRendered()
