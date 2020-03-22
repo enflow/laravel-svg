@@ -29,28 +29,6 @@ You may use the `svg` helper in your templates
 {{ svg('clock')->pack('fas') }}
 ```
 
-## Icons
-We recommend including icons via composer or npm/yarn. This will ensure it's handelled correctly with a package manager, and this library will try to lookup those icons trough the configured paths.
-
-## Packs
-You may specify multiple packs that are used in your application. By default, only the `resources/img/svgs` pack is included, but you may specify additional icon sets like Font Awesome in your config. When the pack isn't specified when including the SVG, the first one that can be found in the order defined in your config will be used. You may overrule this behavoir by calling the `pack` method on the `Enflow\Svg\Svg` class that's returned by the SVG helper.
-
-## Middleware
-This package includes the `Enflow\Svg\Middleware\InjectSvgSpritesheet` middleware which is automatically registered and added to your `web` group. 
-
-This will add the SVG spritesheet to the top of your templates, where all unique SVGs are added. The SVGs rendered in your templates will reference this spritesheet. The reason for this is that in a loop, the SVG only is once in the body, instead of repeating it per row.
-
-You may disable the automatic injection by setting the `register_middleware_automatically` to `false`:
-
-##### config/svg.php
-```php
-<?php
-
-return [
-    'register_middleware_automatically' => false
-];
-```
-
 ## Config
 
 You may publish the config to set the packs that you are using:
@@ -60,7 +38,12 @@ Pushing the config file:
 php artisan vendor:publish --provider="Enflow\Svg\SvgServiceProvider"
 ```
 
-Example config:
+## Icons
+We recommend including icons via composer or npm/yarn. This will ensure it's handelled correctly with a package manager, and this library will try to lookup those icons trough the configured paths.
+
+## Packs
+You may specify multiple packs that are used in your application. By default, only the `resources/img/svgs` pack is included, but you may specify additional icon sets like Font Awesome in your config. When the pack isn't specified when including the SVG, the first one that can be found in the order defined in your config will be used. You may overrule this behavior by calling the `pack` method on the `Enflow\Svg\Svg` class that's returned by the SVG helper.
+
 ```php
 <?php
 
@@ -81,6 +64,23 @@ return [
     ],
 ];
 ```
+
+## Middleware
+This package includes the `Enflow\Svg\Middleware\InjectSvgSpritesheet` middleware which is automatically registered and added to your `web` group. 
+
+This will add the SVG spritesheet to the top of your templates, where all unique SVGs are added. The SVGs rendered in your templates will reference this spritesheet. The reason for this is that in a loop, the SVG only is once in the body, instead of repeating it per row.
+
+You may disable the automatic injection by setting the `register_middleware_automatically` to `false`:
+
+##### config/svg.php
+```php
+<?php
+
+return [
+    'register_middleware_automatically' => false
+];
+```
+
 
 ## Testing
 ``` bash
