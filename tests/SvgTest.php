@@ -30,7 +30,7 @@ class SvgTest extends TestCase
         $this->assertEquals($svg->pack->name, 'custom');
 
         $spritesheet = app(Spritesheet::class);
-        $this->assertCount(1, $spritesheet->svgs);
+        $this->assertCount(1, $spritesheet);
 
         $this->assertMatchesHtmlSnapshot($spritesheet->toHtml());
     }
@@ -76,7 +76,7 @@ class SvgTest extends TestCase
         svg('house')->render();
 
         $spritesheet = app(Spritesheet::class);
-        $this->assertCount(2, $spritesheet->svgs);
+        $this->assertCount(2, $spritesheet);
         $this->assertEquals(2, substr_count($spritesheet->toHtml(), '<symbol'));
     }
 
