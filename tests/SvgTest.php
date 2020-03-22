@@ -6,12 +6,10 @@ use Enflow\Svg\Exceptions\SvgMustBeRendered;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
 use Enflow\Svg\Spritesheet;
 use Enflow\Svg\Svg;
-use Illuminate\Support\Str;
-use Spatie\Snapshots\MatchesSnapshots;
 
 class SvgTest extends TestCase
 {
-    use MatchesSnapshots;
+    use Snapshots;
 
     protected function getEnvironmentSetUp($app)
     {

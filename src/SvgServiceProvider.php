@@ -19,16 +19,7 @@ class SvgServiceProvider extends ServiceProvider
 
         $this->app->singleton(Spritesheet::class);
 
-        $this->registerBladeTag();
-
         $this->registerMiddleware();
-    }
-
-    private function registerBladeTag()
-    {
-        Blade::directive('svg', function ($expression) {
-            return "<?php echo svg($expression)->toHtml(); ?>";
-        });
     }
 
     private function registerMiddleware()

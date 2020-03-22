@@ -97,6 +97,11 @@ If you discover any security related issues, please email michel@enflow.nl inste
 - [Michel Bardelmeijer](https://github.com/mbardelmeijer)
 - [All Contributors](../../contributors)
 
+## Special thanks
+- github.com/jerodev/laravel-font-awesome for the idea
+- github.com/adamwathan/blade-svg for the research
+- github.com/spatie for the GitHub actions test workflow
+
 ## About Enflow
 Enflow is a digital creative agency based in Alphen aan den Rijn, Netherlands. We specialize in developing web applications, mobile applications and websites. You can find more info [on our website](https://enflow.nl/en).
 
