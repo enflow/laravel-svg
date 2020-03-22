@@ -80,6 +80,11 @@ class SvgTest extends TestCase
         $this->assertEquals(2, substr_count($spritesheet->toHtml(), '<symbol'));
     }
 
+    public function test_that_custom_svg_takes_over_width_and_height_from_source()
+    {
+        $this->assertMatchesXmlSnapshot(svg('fixed-width-height')->render());
+    }
+
     public function test_exception_when_rendering_non_existing_svg()
     {
         $this->expectException(SvgNotFoundException::class);

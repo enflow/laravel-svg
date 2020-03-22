@@ -62,7 +62,7 @@ class Svg implements Htmlable, Renderable
         app(Spritesheet::class)->queue($this);
 
         return vsprintf('<svg%s %s><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#%s"></use></svg>', [
-            $this->pack->autoSizeOnViewBox ? sprintf(' width="%sem"', round($this->viewBox()[2] / $this->viewBox()[3], 4)) : '',
+            $this->sizingAttributes(),
             $this->renderAttributes(),
             $this->id()
         ]);
@@ -130,6 +130,21 @@ class Svg implements Htmlable, Renderable
         return $viewBoxParts;
     }
 
+    private function sizingAttributes()
+    {
+        $this->ensureRendered();
+
+        if ($this->pack->autoSizeOnViewBox) {
+            return sprintf(' width="%sem"', round($this->viewBox()[2] / $this->viewBox()[3], 4));
+        }
+
+        $svgDom = $this->dom()->getElementsByTagName("svg")->item(0);
+
+        [$width, $height] = [$svgDom->getAttribute('width'), $svgDom->getAttribute('height')];
+
+        return ($width ? sprintf(' width="%s"', $width) : null) . ($height ? sprintf(' height="%s"', $height) : null);
+    }
+
     private function renderAttributes()
     {
         return collect([
@@ -141,7 +156,7 @@ class Svg implements Htmlable, Renderable
             ->pipe(function (Collection $collection) {
                 return $collection->merge(
                     $this->attributes->map(function ($value, $key) use ($collection) {
-                        return trim($collection->get($key) . ' '. $value);
+                        return trim($collection->get($key) . ' ' . $value);
                     })
                 );
             })
