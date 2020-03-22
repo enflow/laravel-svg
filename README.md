@@ -38,9 +38,6 @@ Pushing the config file:
 php artisan vendor:publish --provider="Enflow\Svg\SvgServiceProvider"
 ```
 
-## Icons
-We recommend including icons via composer or npm/yarn. This will ensure it's handelled correctly with a package manager, and this library will try to lookup those icons trough the configured paths.
-
 ## Packs
 You may specify multiple packs that are used in your application. By default, only the `resources/img/svgs` pack is included, but you may specify additional icon sets like Font Awesome in your config. When the pack isn't specified when including the SVG, the first one that can be found in the order defined in your config will be used. You may overrule this behavior by calling the `pack` method on the `Enflow\Svg\Svg` class that's returned by the SVG helper.
 
@@ -51,14 +48,58 @@ return [
     'packs' => [
         'custom' => resource_path('img/svgs/'),
         'fas' => [
-            'paths' => [
-                base_path('node_modules/@fortawesome/fontawesome-pro/svgs/solid/'),
-                base_path('vendor/@fortawesome/fontawesome-pro/svgs/solid/')
-            ],
+            'path' => base_path('vendor/fortawesome/font-awesome/svgs/solid/'),
             'auto_size_on_viewbox' => true,
         ],
         'fal' => [
-            'path' => base_path('node_modules/@fortawesome/fontawesome-pro/svgs/light/'),
+            'path' => base_path('vendor/fortawesome/font-awesome/svgs/light/'),
+            'auto_size_on_viewbox' => true,
+        ],
+    ],
+];
+```
+
+### Examples
+#### Font Awesome 5 Free
+
+##### Installing
+`composer require fortawesome/font-awesome`
+
+Reference: https://github.com/FortAwesome/Font-Awesome
+
+##### Config
+```php
+<?php
+
+return [
+    'packs' => [
+        'custom' => resource_path('img/svgs/'),
+        'fas' => [
+            'path' => base_path('vendor/fortawesome/font-awesome/svgs/solid/'),
+            'auto_size_on_viewbox' => true,
+        ],
+    ],
+];
+```
+#### Font Awesome 5 Pro
+
+##### Installing
+
+`yarn add @fortawesome/fontawesome-pro`
+
+_Font Awesome 5 doesn't provide a composer package. We'll install it through our npm/yarn pipeline and use that path instead_
+
+Reference: https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers
+
+##### Config
+```php
+<?php
+
+return [
+    'packs' => [
+        'custom' => resource_path('img/svgs/'),
+        'fas' => [
+            'path' => base_path('node_modules/@fortawesome/fontawesome-pro/svgs/solid/'),
             'auto_size_on_viewbox' => true,
         ],
     ],
