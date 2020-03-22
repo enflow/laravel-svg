@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/enflow/laravel-svg.svg?style=flat-square)](https://packagist.org/packages/enflow/laravel-svg)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/enflow/laravel-svg/run-tests?label=tests)
-[![Total Downloads](https://img.shields.io/packagist/dt/enflow/document-replacer.svg?style=flat-square)](https://packagist.org/packages/enflow/laravel-svg)
+[![Total Downloads](https://img.shields.io/packagist/dt/enflow/laravel-svg.svg?style=flat-square)](https://packagist.org/packages/enflow/laravel-svg)
 
 The `enflow/laravel-svg` package provides a easy way include SVGs in your templates.
 

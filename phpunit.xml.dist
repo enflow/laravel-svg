@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Enflow's Document Replacer">
+        <testsuite name="Enflow's Laravel SVG">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
