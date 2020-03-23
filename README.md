@@ -1,7 +1,7 @@
 # Using SVGs with easy
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/enflow/laravel-svg.svg?style=flat-square)](https://packagist.org/packages/enflow/laravel-svg)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/enflow/laravel-svg/run-tests?label=tests)
+![GitHub Workflow Status](https://github.com/enflow-nl/laravel-svg/workflows/run-tests/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/enflow/laravel-svg.svg?style=flat-square)](https://packagist.org/packages/enflow/laravel-svg)
 
 The `enflow/laravel-svg` package provides a easy way include SVGs in your templates.
