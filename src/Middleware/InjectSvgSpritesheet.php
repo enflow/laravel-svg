@@ -40,9 +40,14 @@ class InjectSvgSpritesheet
 
     private function injectSpritesheet(SymfonyBaseResponse $response): SymfonyBaseResponse
     {
-        if (Str::contains($content = $response->getContent(), '<body>')) {
-            // We insert it in the top part of the <body> as then the CSS can load first before the SVG body is sent.
-            $response->setContent(str_replace('<body>', $this->spritesheet() . '<body>', $content));
+        if (Str::contains($content = $response->getContent(), '<body')) {
+            // Ported from https://stackoverflow.com/questions/2216224/php-inject-iframe-right-after-body-tag
+            $matches = preg_split('/(<body.*?>)/i', $content, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+            if (!empty($matches[0]) && !empty($matches[1]) && !empty($matches[2])) {
+                // We insert it in the top part of the <body> as then the CSS can load first before the SVG body is sent.
+                $response->setContent($matches[0] . $matches[1] . $this->spritesheet() . $matches[2]);
+            }
         }
 
         return $response;

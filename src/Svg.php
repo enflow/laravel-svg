@@ -2,10 +2,6 @@
 
 namespace Enflow\Svg;
 
-use DOMDocument;
-use DOMElement;
-use DOMNode;
-use Enflow\Svg\Exceptions\SvgInvalidException;
 use Enflow\Svg\Exceptions\SvgMustBeRendered;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
 use Illuminate\Contracts\Support\Renderable;
@@ -17,7 +13,8 @@ class Svg implements Htmlable, Renderable
 {
     public string $name;
     public ?Pack $pack = null;
-    private string $contents;
+    /** @readonly */
+    public string $contents;
     private Collection $attributes;
 
     public function __construct(string $name)
@@ -40,7 +37,7 @@ class Svg implements Htmlable, Renderable
     public function pack($pack): self
     {
         if (!$pack instanceof Pack) {
-            $pack = Pack::get($pack);
+            $pack = app(PackCollection::class)->find($pack);
         }
 
         $this->pack = $pack;
@@ -80,12 +77,15 @@ class Svg implements Htmlable, Renderable
 
     private function prepareForRendering()
     {
-        $packs = Pack::all();
+        $packs = app(PackCollection::class);
 
         foreach ($this->pack ? [$packs->get($this->pack->name)] : $packs as $pack) {
             if ($path = $pack->lookup($this->name)) {
-                $this->contents = file_get_contents($path);
                 $this->pack = $pack;
+                
+                $this->contents = StaticCache::once(static::class . '@' . $this->id() . '-' . $path, function () use ($path) {
+                    return file_get_contents($path);
+                });
 
                 return;
             }
@@ -98,32 +98,14 @@ class Svg implements Htmlable, Renderable
     {
         $this->ensureRendered();
 
-        return array_reduce(
-            iterator_to_array($this->dom()->childNodes),
-            function ($carry, DOMNode $child) {
-                // Set default fill if not already defined.
-                if ($child instanceof DOMElement && !$child->hasAttribute('fill')) {
-                    $child->setAttribute('fill', 'currentColor');
-                }
-
-                return $carry . $child->ownerDocument->saveHTML($child);
-            }
-        );
+        return InnerParser::parse($this);
     }
 
     public function viewBox()
     {
         $this->ensureRendered();
 
-        $viewBox = $this->dom()->getAttribute('viewBox');
-
-        $viewBoxParts = array_map('intval', explode(' ', $viewBox));
-
-        if (count($viewBoxParts) !== 4) {
-            throw SvgInvalidException::viewportInvalid($this, $viewBox);
-        }
-
-        return $viewBoxParts;
+        return ViewboxParser::parse($this);
     }
 
     private function sizingAttributes()
@@ -134,7 +116,7 @@ class Svg implements Htmlable, Renderable
             return sprintf(' width="%sem"', round($this->viewBox()[2] / $this->viewBox()[3], 4));
         }
 
-        $svgDom = $this->dom();
+        $svgDom = DomParser::node($this);
 
         [$width, $height] = [$svgDom->getAttribute('width'), $svgDom->getAttribute('height')];
 
@@ -165,20 +147,6 @@ class Svg implements Htmlable, Renderable
             })
             ->values()
             ->implode(' ');
-    }
-
-    private function dom(): DOMNode
-    {
-        static $domCache;
-
-        if (!empty($domCache[$this->id()])) {
-            return $domCache[$this->id()];
-        }
-
-        $dom = new DOMDocument();
-        @$dom->loadXML($this->contents);
-
-        return $domCache[$this->id()] = $dom->getElementsByTagName("svg")->item(0);
     }
 
     private function ensureRendered()

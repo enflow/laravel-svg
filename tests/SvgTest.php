@@ -69,6 +69,15 @@ class SvgTest extends TestCase
         $this->assertEquals($svg->render(), (string)$svg);
     }
 
+    public function test_that_every_render_is_the_same()
+    {
+        $customIcon = svg('clock');
+        $svgOne = svg('house');
+        $svgTwo = svg('house');
+
+        $this->assertEquals($svgOne->render(), $svgTwo->render());
+    }
+
     public function test_that_svg_is_only_once_in_spritesheet()
     {
         svg('clock')->render();

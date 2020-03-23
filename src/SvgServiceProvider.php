@@ -4,7 +4,6 @@ namespace Enflow\Svg;
 
 use Enflow\Svg\Middleware\InjectSvgSpritesheet;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
 
 class SvgServiceProvider extends ServiceProvider
 {
@@ -17,6 +16,9 @@ class SvgServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'svg');
 
+        $this->app->singleton(PackCollection::class, function () {
+            return PackCollection::fromConfig(config('svg.packs', []));
+        });
         $this->app->singleton(Spritesheet::class);
 
         $this->registerMiddleware();

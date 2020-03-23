@@ -5,6 +5,7 @@ namespace Enflow\Svg\Test;
 use Enflow\Svg\Exceptions\PackNotFoundException;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
 use Enflow\Svg\Pack;
+use Enflow\Svg\PackCollection;
 use Enflow\Svg\Spritesheet;
 use Spatie\Snapshots\MatchesSnapshots;
 
@@ -19,12 +20,12 @@ class PackTest extends TestCase
 
     public function test_get_all_packs()
     {
-        $this->assertCount(1, Pack::all());
+        $this->assertCount(1, app(PackCollection::class)->all());
     }
 
     public function test_pack_lookup_method()
     {
-        $pack = Pack::get('custom');
+        $pack = app(PackCollection::class)->find('custom');
 
         $this->assertStringEndsWith('fixtures/custom/clock.svg', $pack->lookup('clock'));
     }
@@ -33,6 +34,6 @@ class PackTest extends TestCase
     {
         $this->expectException(PackNotFoundException::class);
 
-        Pack::get('non-existing');
+        app(PackCollection::class)->find('non-existing');
     }
 }
