@@ -32,7 +32,9 @@ class SvgTest extends TestCase
         $spritesheet = app(Spritesheet::class);
         $this->assertCount(1, $spritesheet);
 
-        $this->assertMatchesHtmlSnapshot($spritesheet->toHtml());
+        // We don't use 'assertMatchesHtmlSnapshot' as this adds a <body> etc. around the test-subject.
+        // This is fine locally, but fails in the GitHub actions matrix.
+        $this->assertMatchesTextSnapshot($spritesheet->toHtml());
     }
 
     public function test_auto_size_for_svg_rendering()

@@ -82,7 +82,7 @@ class Svg implements Htmlable, Renderable
         foreach ($this->pack ? [$packs->get($this->pack->name)] : $packs as $pack) {
             if ($path = $pack->lookup($this->name)) {
                 $this->pack = $pack;
-                
+
                 $this->contents = StaticCache::once(static::class . '@' . $this->id() . '-' . $path, function () use ($path) {
                     return file_get_contents($path);
                 });
