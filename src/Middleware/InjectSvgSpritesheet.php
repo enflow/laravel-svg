@@ -40,9 +40,9 @@ class InjectSvgSpritesheet
 
     private function injectSpritesheet(SymfonyBaseResponse $response): SymfonyBaseResponse
     {
-        if (Str::contains($content = $response->getContent(), '<head>')) {
-            // We insert it in the bottom part of the <head> as then the CSS can load first before the SVG body is sent.
-            $response->setContent(str_replace('</head>', $this->spritesheet() . '</head>', $content));
+        if (Str::contains($content = $response->getContent(), '<body>')) {
+            // We insert it in the top part of the <body> as then the CSS can load first before the SVG body is sent.
+            $response->setContent(str_replace('<body>', $this->spritesheet() . '<body>', $content));
         }
 
         return $response;
