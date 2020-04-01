@@ -2,8 +2,9 @@
 
 namespace Enflow\Svg;
 
-use Enflow\Svg\Middleware\InjectSvgSpritesheet;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
+use Enflow\Svg\Middleware\InjectSvgSpritesheet;
 
 class SvgServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,7 @@ class SvgServiceProvider extends ServiceProvider
     private function registerMiddleware()
     {
         if (config('svg.register_middleware_automatically', true)) {
-            $this->app['router']->pushMiddlewareToGroup('web', InjectSvgSpritesheet::class);
+            $this->app[Kernel::class]->pushMiddleware(InjectSvgSpritesheet::class);
         }
     }
 }
