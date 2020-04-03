@@ -11,9 +11,20 @@ use Symfony\Component\HttpFoundation\Response as SymfonyBaseResponse;
 
 class InjectSvgSpritesheet
 {
+    private Spritesheet $spritesheet;
+
+    public function __construct(Spritesheet $spritesheet)
+    {
+        $this->spritesheet = $spritesheet;
+    }
+
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
+
+        if ($this->spritesheet->injectedInResponse) {
+            return $response;
+        }
 
         if (
             $response instanceof RedirectResponse
@@ -22,6 +33,12 @@ class InjectSvgSpritesheet
             || $response->getContent() === false
             || $request->isXmlHttpRequest()
         ) {
+            return $response;
+        }
+
+        $this->spritesheet->injectedInResponse = true;
+
+        if ($this->spritesheet->isEmpty()) {
             return $response;
         }
 
@@ -46,22 +63,15 @@ class InjectSvgSpritesheet
 
             if (!empty($matches[0]) && !empty($matches[1]) && !empty($matches[2])) {
                 // We insert it in the top part of the <body> as then the CSS can load first before the SVG body is sent.
-                $response->setContent($matches[0] . $matches[1] . $this->spritesheet() . $matches[2]);
+                $response->setContent($matches[0] . $matches[1] . $this->spritesheet->toHtml() . $matches[2]);
             }
         }
 
         return $response;
     }
 
-    private function spritesheet(): string
-    {
-        return app(Spritesheet::class)->toHtml();
-    }
-
     private function stylesheet()
     {
-        if (app(Spritesheet::class)->count()) {
-            return '<style>.svg-auto-size {display: inline-block;font-size: inherit;height: 1em;overflow: visible;vertical-align: -.125em;}</style>';
-        }
+        return '<style>.svg-auto-size {display: inline-block;font-size: inherit;height: 1em;overflow: visible;vertical-align: -.125em;}</style>';
     }
 }

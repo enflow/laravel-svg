@@ -3,6 +3,7 @@
 namespace Enflow\Svg;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Enflow\Svg\Middleware\InjectSvgSpritesheet;
 
@@ -28,7 +29,10 @@ class SvgServiceProvider extends ServiceProvider
     private function registerMiddleware()
     {
         if (config('svg.register_middleware_automatically', true)) {
+            // We run it both globally and on the web group to be able to use with middleware priorites.
+            // We ensure in the middleware itself that it's only ran once.
             $this->app[Kernel::class]->pushMiddleware(InjectSvgSpritesheet::class);
+            $this->app[Kernel::class]->appendMiddlewareToGroup('web', InjectSvgSpritesheet::class);
         }
     }
 }

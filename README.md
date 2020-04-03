@@ -122,6 +122,21 @@ return [
 ];
 ```
 
+### Using with other middleware
+When using `enflow/laravel-svg` in combination with another middleware that must always be executed after the SVGs are injected in the response, you may use the $middlewarePriority logic on the Laravel router to ensure it's always run after. 
+
+The order in this array is counterintuitive: at first must the `CacheResponse` middleware be specified, and then the SVG injection middleware. This is due to the way middleware responses are build. This ensures that first the SVGs are injected, and that complete response is cached.
+
+Example for usage with [spatie/laravel-responsecache](https://github.com/spatie/laravel-responsecache)
+
+##### app/Http/Kernel.php
+```
+protected $middlewarePriority = [
+    ...
+    \Spatie\ResponseCache\Middlewares\CacheResponse::class,
+    \Enflow\Svg\Middleware\InjectSvgSpritesheet::class,
+];
+``` 
 
 ## Testing
 ``` bash
