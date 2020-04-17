@@ -14,7 +14,7 @@ class ViewboxParser
             $viewBoxParts = array_map('intval', explode(' ', $viewBox));
 
             if (count($viewBoxParts) !== 4) {
-                throw SvgInvalidException::viewportInvalid($this, $viewBox);
+                throw SvgInvalidException::viewportInvalid($svg, $viewBox);
             }
 
             return $viewBoxParts;
