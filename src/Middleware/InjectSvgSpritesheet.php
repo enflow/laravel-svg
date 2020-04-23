@@ -22,7 +22,7 @@ class InjectSvgSpritesheet
     {
         $response = $next($request);
 
-        if ($this->spritesheet->injectedInResponse) {
+        if ($this->spritesheet->injected) {
             return $response;
         }
 
@@ -36,7 +36,7 @@ class InjectSvgSpritesheet
             return $response;
         }
 
-        $this->spritesheet->injectedInResponse = true;
+        $this->spritesheet->injected = true;
 
         if ($this->spritesheet->isEmpty()) {
             return $response;

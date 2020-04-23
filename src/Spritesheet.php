@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class Spritesheet extends Collection implements Htmlable
 {
-    public bool $injectedInResponse = false;
+    public bool $injected = false;
 
     public function queue(Svg $svg): void
     {

@@ -4,10 +4,10 @@ namespace Enflow\Svg;
 
 use Enflow\Svg\Exceptions\SvgMustBeRendered;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Illuminate\Contracts\Support\Htmlable;
 
 class Svg implements Htmlable, Renderable
 {
@@ -77,21 +77,24 @@ class Svg implements Htmlable, Renderable
 
     private function prepareForRendering()
     {
-        $packs = app(PackCollection::class);
-
-        foreach ($this->pack ? [$packs->get($this->pack->name)] : $packs as $pack) {
-            if ($path = $pack->lookup($this->name)) {
-                $this->pack = $pack;
-
-                $this->contents = StaticCache::once(static::class . '@' . $this->id() . '-' . $path, function () use ($path) {
-                    return file_get_contents($path);
-                });
-
-                return;
+        if (empty($this->pack)) {
+            // No specific pack is defined.
+            // We search for the first pack that has auto discovery enabled and has the icon available.
+            foreach (app(PackCollection::class)->filter->autoDiscovery as $pack) {
+                if ($path = $pack->lookup($this->name)) {
+                    $this->pack = $pack;
+                    break;
+                }
             }
         }
 
-        throw SvgNotFoundException::create($this->name);
+        if (empty($this->pack) || !($path = $this->pack->lookup($this->name))) {
+            throw SvgNotFoundException::create($this->name);
+        }
+
+        $this->contents = StaticCache::once(static::class . '@' . $this->id() . '-' . $path, function () use ($path) {
+            return file_get_contents($path);
+        });
     }
 
     public function inner()

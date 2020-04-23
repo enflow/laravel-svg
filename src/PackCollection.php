@@ -15,6 +15,7 @@ class PackCollection extends Collection
                 $pack->name = $name;
                 $pack->paths = Arr::wrap(is_string($config) ? $config : ($config['paths'] ?? $config['path'] ?? null));
                 $pack->autoSizeOnViewBox = $config['auto_size_on_viewbox'] ?? false;
+                $pack->autoDiscovery = $config['auto_discovery'] ?? true;
             });
         }));
     }

@@ -15,6 +15,11 @@ class SvgTest extends TestCase
     {
         $app['config']->set('svg.packs', [
             'custom' => __DIR__ . '/fixtures/custom',
+            'auto-discovery-disabled' => [
+                'path' => __DIR__ . '/fixtures/icons',
+                'auto_size_on_viewbox' => true,
+                'auto_discovery' => false,
+            ],
             'icons' => [
                 'path' => __DIR__ . '/fixtures/icons',
                 'auto_size_on_viewbox' => true,
@@ -50,6 +55,14 @@ class SvgTest extends TestCase
         $this->assertStringContainsString('svg-auto-size', $rendered);
         $this->assertStringContainsString('mr-4', $rendered);
         $this->assertStringContainsString('focusable="false"', $rendered);
+    }
+
+    public function test_auto_discovery_disabled_pack_is_used_when_specific()
+    {
+        /** @var Svg $svg */
+        $svg = svg('house')->pack('auto-discovery-disabled'); // Get from "auto-discovery-disabled"
+        $svg->render();
+        $this->assertEquals($svg->pack->name, 'auto-discovery-disabled');
     }
 
     public function test_viewbox_parsing()

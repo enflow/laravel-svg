@@ -19,6 +19,13 @@ class Pack
      * @var bool
      */
     public bool $autoSizeOnViewBox = false;
+    /**
+     * Auto discovery defines is the pack is searched when no specific pack is defined in the icon lookup.
+     * Use case: we have a pack available but want to ensure the user must opt-in to it's usage.
+     *
+     * @var bool
+     */
+    public bool $autoDiscovery = true;
 
     public function lookup(string $name): ?string
     {
