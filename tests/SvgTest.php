@@ -11,21 +11,18 @@ class SvgTest extends TestCase
 {
     use Snapshots;
 
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('svg.packs', [
-            'custom' => __DIR__ . '/fixtures/custom',
-            'auto-discovery-disabled' => [
-                'path' => __DIR__ . '/fixtures/icons',
-                'auto_size_on_viewbox' => true,
-                'auto_discovery' => false,
-            ],
-            'icons' => [
-                'path' => __DIR__ . '/fixtures/icons',
-                'auto_size_on_viewbox' => true,
-            ],
-        ]);
-    }
+    protected array $packs = [
+        'custom' => __DIR__ . '/fixtures/custom',
+        'auto-discovery-disabled' => [
+            'path' => __DIR__ . '/fixtures/icons',
+            'auto_size_on_viewbox' => true,
+            'auto_discovery' => false,
+        ],
+        'icons' => [
+            'path' => __DIR__ . '/fixtures/icons',
+            'auto_size_on_viewbox' => true,
+        ],
+    ];
 
     public function test_svg_rendering()
     {
@@ -33,13 +30,6 @@ class SvgTest extends TestCase
 
         $this->assertMatchesXmlSnapshot($svg->render());
         $this->assertEquals($svg->pack->name, 'custom');
-
-        $spritesheet = app(Spritesheet::class);
-        $this->assertCount(1, $spritesheet);
-
-        // We don't use 'assertMatchesHtmlSnapshot' as this adds a <body> etc. around the test-subject.
-        // This is fine locally, but fails in the GitHub actions matrix.
-        $this->assertMatchesTextSnapshot($spritesheet->toHtml());
     }
 
     public function test_auto_size_for_svg_rendering()
@@ -91,17 +81,6 @@ class SvgTest extends TestCase
         $svgTwo = svg('house');
 
         $this->assertEquals($svgOne->render(), $svgTwo->render());
-    }
-
-    public function test_that_svg_is_only_once_in_spritesheet()
-    {
-        svg('clock')->render();
-        svg('clock')->render();
-        svg('house')->render();
-
-        $spritesheet = app(Spritesheet::class);
-        $this->assertCount(2, $spritesheet);
-        $this->assertEquals(2, substr_count($spritesheet->toHtml(), '<symbol'));
     }
 
     public function test_that_custom_svg_takes_over_width_and_height_from_source()

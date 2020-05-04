@@ -11,12 +11,9 @@ use Spatie\Snapshots\MatchesSnapshots;
 
 class PackTest extends TestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('svg.packs', [
-            'custom' => __DIR__ . '/fixtures/custom',
-        ]);
-    }
+    protected array $packs = [
+        'custom' => __DIR__ . '/fixtures/custom',
+    ];
 
     public function test_get_all_packs()
     {
