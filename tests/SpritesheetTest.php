@@ -14,7 +14,7 @@ class SpritesheetTest extends TestCase
     public function test_spritesheet()
     {
         $this->assertCount(0, app(Spritesheet::class));
-        $this->assertMatchesTextSnapshot(app(Spritesheet::class));
+        $this->assertMatchesTextSnapshot(app(Spritesheet::class)->toHtml());
 
         $this->assertMatchesXmlSnapshot(svg('clock')->render());
 
@@ -22,7 +22,7 @@ class SpritesheetTest extends TestCase
 
         // We don't use 'assertMatchesHtmlSnapshot' as this adds a <body> etc. around the test-subject.
         // This is fine locally, but fails in the GitHub actions matrix.
-        $this->assertMatchesTextSnapshot(app(Spritesheet::class));
+        $this->assertMatchesTextSnapshot(app(Spritesheet::class)->toHtml());
 
         svg('clock')->render();
         $this->assertCount(1, app(Spritesheet::class));
