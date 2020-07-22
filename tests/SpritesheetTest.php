@@ -28,6 +28,13 @@ class SpritesheetTest extends TestCase
         $this->assertCount(1, app(Spritesheet::class));
     }
 
+    public function test_spritesheet_helper()
+    {
+        svg('clock')->render();
+
+        $this->assertCount(1, spritesheet());
+    }
+
     public function test_that_svg_is_only_once_in_spritesheet()
     {
         svg('clock')->render();
