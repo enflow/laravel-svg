@@ -47,7 +47,7 @@ class InjectSvgSpritesheet
 
     private function injectStylesheet(SymfonyBaseResponse $response): SymfonyBaseResponse
     {
-        if (Str::contains($content = $response->getContent(), '<head>')) {
+        if (Str::contains($content = $response->getContent(), '<head>') && !Str::contains($content, 'svg-stylesheet')) {
             // We insert it in the top part of the <head> as then custom CSS will overrule ours
             $response->setContent(str_replace('<head>', '<head>' . $this->stylesheet(), $content));
         }
@@ -57,7 +57,7 @@ class InjectSvgSpritesheet
 
     private function injectSpritesheet(SymfonyBaseResponse $response): SymfonyBaseResponse
     {
-        if (Str::contains($content = $response->getContent(), '<body')) {
+        if (Str::contains($content = $response->getContent(), '<body') && !Str::contains($content, 'svg-spritesheet')) {
             // Ported from https://stackoverflow.com/questions/2216224/php-inject-iframe-right-after-body-tag
             $matches = preg_split('/(<body.*?>)/i', $content, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
@@ -72,6 +72,6 @@ class InjectSvgSpritesheet
 
     private function stylesheet()
     {
-        return '<style>.svg-auto-size {display: inline-block;font-size: inherit;height: 1em;overflow: visible;vertical-align: -.125em;}</style>';
+        return $this->spritesheet->toStylesheet();
     }
 }
