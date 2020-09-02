@@ -33,4 +33,24 @@ class PackTest extends TestCase
 
         app(PackCollection::class)->find('non-existing');
     }
+
+    public function test_manually_adding_pack()
+    {
+        app(PackCollection::class)->addPack('icons', [
+            'path' => __DIR__ . '/fixtures/icons',
+        ]);
+
+        $this->assertNotEmpty(svg('clock')->pack('icons'));
+    }
+
+    public function test_manually_adding_packs()
+    {
+        app(PackCollection::class)->addPacks([
+            'icons' => [
+                'path' => __DIR__ . '/fixtures/icons',
+            ]
+        ]);
+
+        $this->assertNotEmpty(svg('clock')->pack('icons'));
+    }
 }
