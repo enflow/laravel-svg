@@ -10,13 +10,25 @@ class PackCollection extends Collection
 {
     public static function fromConfig(array $config): self
     {
-        return new static(collect($config)->map(function ($config, string $name) {
-            return tap(new Pack, function (Pack $pack) use ($config, $name) {
-                $pack->name = $name;
-                $pack->paths = Arr::wrap(is_string($config) ? $config : ($config['paths'] ?? $config['path'] ?? null));
-                $pack->autoSizeOnViewBox = $config['auto_size_on_viewbox'] ?? false;
-                $pack->autoDiscovery = $config['auto_discovery'] ?? true;
-            });
+        return (new static)->addPacks($config);
+    }
+
+    public function addPacks(array $config): self
+    {
+        collect($config)->each(function ($config, $name) {
+            $this->addPack($name, $config);
+        });
+
+        return $this;
+    }
+
+    public function addPack(string $name, $config): self
+    {
+        return $this->put($name, tap(new Pack, function (Pack $pack) use ($config, $name) {
+            $pack->name = $name;
+            $pack->paths = Arr::wrap(is_string($config) ? $config : ($config['paths'] ?? $config['path'] ?? null));
+            $pack->autoSizeOnViewBox = $config['auto_size_on_viewbox'] ?? false;
+            $pack->autoDiscovery = $config['auto_discovery'] ?? true;
         }));
     }
 
