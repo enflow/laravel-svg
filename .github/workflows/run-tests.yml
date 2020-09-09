@@ -1,5 +1,3 @@
-# Ported from https://github.com/spatie/laravel-flash/blob/master/.github/workflows/run-tests.yml
-
 name: run-tests
 
 on: [push, pull_request]
@@ -8,13 +6,15 @@ jobs:
     test:
         runs-on: ${{ matrix.os }}
         strategy:
-            fail-fast: false
+            fail-fast: true
             matrix:
                 os: [ubuntu-latest, windows-latest]
                 php: [7.4]
-                laravel: [6.*, 7.*]
+                laravel: [8.*, 6.*, 7.*]
                 dependency-version: [prefer-lowest, prefer-stable]
                 include:
+                    -   laravel: 8.*
+                        testbench: 6.*
                     -   laravel: 7.*
                         testbench: 5.*
                     -   laravel: 6.*
@@ -24,10 +24,10 @@ jobs:
 
         steps:
             -   name: Checkout code
-                uses: actions/checkout@v1
+                uses: actions/checkout@v2
 
             -   name: Cache dependencies
-                uses: actions/cache@v1
+                uses: actions/cache@v2
                 with:
                     path: ~/.composer/cache/files
                     key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
@@ -43,6 +43,5 @@ jobs:
                 run: |
                     composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
                     composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
-
             -   name: Execute tests
                 run: vendor/bin/phpunit
