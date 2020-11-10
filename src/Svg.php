@@ -64,11 +64,7 @@ class Svg implements Htmlable, Renderable
         $this->prepareForRendering();
 
         if ($this->inline) {
-            return vsprintf('<svg%s %s>%s</svg>', [
-                $this->sizingAttributes(),
-                $this->renderAttributes(),
-                $this->contents
-            ]);
+            return $this->contents;
         }
 
         app(Spritesheet::class)->queue($this);
