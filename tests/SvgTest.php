@@ -6,6 +6,7 @@ use Enflow\Svg\Exceptions\SvgMustBeRendered;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
 use Enflow\Svg\Spritesheet;
 use Enflow\Svg\Svg;
+use Illuminate\Support\Facades\Request;
 
 class SvgTest extends TestCase
 {
@@ -76,7 +77,9 @@ class SvgTest extends TestCase
 
     public function test_that_every_render_is_the_same()
     {
-        $customIcon = svg('clock');
+        // First render a complete separate one, so the spritesheet isn't empty.
+        svg('clock');
+
         $svgOne = svg('house');
         $svgTwo = svg('house');
 
@@ -102,5 +105,10 @@ class SvgTest extends TestCase
         $this->expectException(SvgMustBeRendered::class);
 
         svg('house')->viewBox();
+    }
+
+    public function test_that_svg_renders_inline_if_set()
+    {
+        $this->assertMatchesXmlSnapshot(svg('clock')->inline()->render());
     }
 }

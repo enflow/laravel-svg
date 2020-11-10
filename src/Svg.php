@@ -7,6 +7,7 @@ use Enflow\Svg\Exceptions\SvgNotFoundException;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
 class Svg implements Htmlable, Renderable
@@ -15,6 +16,7 @@ class Svg implements Htmlable, Renderable
     public ?Pack $pack = null;
     /** @readonly */
     public string $contents;
+    public bool $inline = false;
     private Collection $attributes;
 
     public function __construct(string $name)
@@ -22,6 +24,11 @@ class Svg implements Htmlable, Renderable
         $this->name = $name;
 
         $this->attributes = collect(); // PHP 7.4 doesn't support defaults by function.
+
+        // Automatically inline SVGs in Ajax requests, as the spritesheet isn't up-to-date then.
+        if (config('svg.inline_for_ajax', true)) {
+            $this->inline(Request::ajax());
+        }
     }
 
     public function id(): string
@@ -36,7 +43,7 @@ class Svg implements Htmlable, Renderable
      */
     public function pack($pack): self
     {
-        if (!$pack instanceof Pack) {
+        if (! $pack instanceof Pack) {
             $pack = app(PackCollection::class)->find($pack);
         }
 
@@ -56,6 +63,14 @@ class Svg implements Htmlable, Renderable
     {
         $this->prepareForRendering();
 
+        if ($this->inline) {
+            return vsprintf('<svg%s %s>%s</svg>', [
+                $this->sizingAttributes(),
+                $this->renderAttributes(),
+                $this->contents
+            ]);
+        }
+
         app(Spritesheet::class)->queue($this);
 
         return vsprintf('<svg%s %s><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#%s"></use></svg>', [
@@ -63,6 +78,13 @@ class Svg implements Htmlable, Renderable
             $this->renderAttributes(),
             $this->id()
         ]);
+    }
+
+    public function inline(bool $enabled = true): self
+    {
+        $this->inline = $enabled;
+
+        return $this;
     }
 
     public function __toString()
@@ -88,7 +110,7 @@ class Svg implements Htmlable, Renderable
             }
         }
 
-        if (empty($this->pack) || !($path = $this->pack->lookup($this->name))) {
+        if (empty($this->pack) || ! ($path = $this->pack->lookup($this->name))) {
             throw SvgNotFoundException::create($this->name);
         }
 
