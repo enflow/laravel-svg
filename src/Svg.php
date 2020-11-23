@@ -25,9 +25,9 @@ class Svg implements Htmlable, Renderable
 
         $this->attributes = collect(); // PHP 7.4 doesn't support defaults by function.
 
-        // Automatically inline SVGs in Ajax requests, as the spritesheet isn't up-to-date then.
+        // Automatically inline SVGs in Ajax requests or Livewire requests, as the spritesheet isn't up-to-date then.
         if (config('svg.inline_for_ajax', true)) {
-            $this->inline(Request::ajax());
+            $this->inline(Request::ajax() || Request::header('x-livewire'));
         }
     }
 
