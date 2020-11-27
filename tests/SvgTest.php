@@ -111,4 +111,14 @@ class SvgTest extends TestCase
     {
         $this->assertMatchesXmlSnapshot(svg('clock')->inline()->render());
     }
+
+    public function test_that_svg_inline_includes_viewbox()
+    {
+        $this->assertStringContainsString('viewBox', svg('clock')->inline()->render());
+    }
+
+    public function test_that_svg_inline_removes_comment()
+    {
+        $this->assertStringNotContainsString('<!--', svg('with-comment')->inline()->render());
+    }
 }

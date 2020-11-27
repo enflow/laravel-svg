@@ -64,7 +64,12 @@ class Svg implements Htmlable, Renderable
         $this->prepareForRendering();
 
         if ($this->inline) {
-            return $this->contents;
+            return vsprintf('<svg viewBox="%s" %s %s>%s</svg>', [
+                implode(' ', $this->viewBox()),
+                $this->sizingAttributes(),
+                $this->renderAttributes(),
+                $this->inner(),
+            ]);
         }
 
         app(Spritesheet::class)->queue($this);
@@ -72,7 +77,7 @@ class Svg implements Htmlable, Renderable
         return vsprintf('<svg%s %s><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#%s"></use></svg>', [
             $this->sizingAttributes(),
             $this->renderAttributes(),
-            $this->id()
+            $this->id(),
         ]);
     }
 
