@@ -6,7 +6,6 @@ use Enflow\Svg\Exceptions\SvgMustBeRendered;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
 use Enflow\Svg\Spritesheet;
 use Enflow\Svg\Svg;
-use Illuminate\Support\Facades\Request;
 
 class SvgTest extends TestCase
 {

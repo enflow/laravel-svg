@@ -106,6 +106,7 @@ class Svg implements Htmlable, Renderable
             foreach (app(PackCollection::class)->filter->autoDiscovery as $pack) {
                 if ($path = $pack->lookup($this->name)) {
                     $this->pack = $pack;
+
                     break;
                 }
             }
@@ -169,6 +170,7 @@ class Svg implements Htmlable, Renderable
                 if (is_int($key)) {
                     return $value;
                 }
+
                 return sprintf('%s="%s"', $key, $value);
             })
             ->values()

@@ -2,9 +2,9 @@
 
 namespace Enflow\Svg;
 
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
-use Illuminate\Contracts\Support\Htmlable;
 use LogicException;
 
 class Spritesheet extends Collection implements Htmlable

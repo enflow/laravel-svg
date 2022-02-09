@@ -2,8 +2,8 @@
 
 namespace Enflow\Svg;
 
-use DOMNode;
 use DOMElement;
+use DOMNode;
 
 class InnerParser
 {
@@ -14,7 +14,7 @@ class InnerParser
                 iterator_to_array(DomParser::node($svg)->childNodes),
                 function ($carry, DOMNode $child) {
                     // Set default fill if not already defined.
-                    if ($child instanceof DOMElement && !$child->hasAttribute('fill')) {
+                    if ($child instanceof DOMElement && ! $child->hasAttribute('fill')) {
                         $child->setAttribute('fill', 'currentColor');
                     }
 
