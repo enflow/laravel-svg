@@ -6,16 +6,14 @@ use Closure;
 use Enflow\Svg\Spritesheet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as SymfonyBaseResponse;
 
 class InjectSvgSpritesheet
 {
-    private Spritesheet $spritesheet;
-
-    public function __construct(Spritesheet $spritesheet)
+    public function __construct(private Spritesheet $spritesheet)
     {
-        $this->spritesheet = $spritesheet;
     }
 
     public function handle(Request $request, Closure $next)
@@ -49,7 +47,7 @@ class InjectSvgSpritesheet
     {
         if (Str::contains($content = $response->getContent(), '<head>') && ! Str::contains($content, 'svg-stylesheet')) {
             // We insert it in the top part of the <head> as then custom CSS will overrule ours
-            $response->setContent(str_replace('<head>', '<head>' . $this->stylesheet(), $content));
+            $response->setContent(str_replace('<head>', '<head>'.$this->stylesheet(), $content));
         }
 
         return $response;
@@ -63,14 +61,14 @@ class InjectSvgSpritesheet
 
             if (! empty($matches[0]) && ! empty($matches[1]) && ! empty($matches[2])) {
                 // We insert it in the top part of the <body> as then the CSS can load first before the SVG body is sent.
-                $response->setContent($matches[0] . $matches[1] . $this->spritesheet->toHtml() . $matches[2]);
+                $response->setContent($matches[0].$matches[1].$this->spritesheet->toHtml().$matches[2]);
             }
         }
 
         return $response;
     }
 
-    private function stylesheet()
+    private function stylesheet(): HtmlString
     {
         return $this->spritesheet->toStylesheet();
     }

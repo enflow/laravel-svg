@@ -12,17 +12,17 @@ use Illuminate\Support\Str;
 
 class Svg implements Htmlable, Renderable
 {
-    public string $name;
     public ?Pack $pack = null;
+
     /** @readonly */
     public string $contents;
+
     public bool $inline = false;
+
     private Collection $attributes;
 
-    public function __construct(string $name)
+    public function __construct(public string $name)
     {
-        $this->name = $name;
-
         $this->attributes = collect(); // PHP 7.4 doesn't support defaults by function.
 
         // Automatically inline SVGs in Ajax requests or Livewire requests, as the spritesheet isn't up-to-date then.
@@ -33,12 +33,13 @@ class Svg implements Htmlable, Renderable
 
     public function id(): string
     {
-        return $this->pack->name . '-' . $this->name;
+        return $this->pack->name.'-'.$this->name;
     }
 
     /**
-     * @param string|Pack $pack
+     * @param  string|Pack  $pack
      * @return $this
+     *
      * @throws Exceptions\PackNotFoundException
      */
     public function pack($pack): self
@@ -98,13 +99,13 @@ class Svg implements Htmlable, Renderable
         return $this->toHtml();
     }
 
-    private function prepareForRendering()
+    private function prepareForRendering(): void
     {
         if (empty($this->pack)) {
             // No specific pack is defined.
             // We search for the first pack that has auto discovery enabled and has the icon available.
             foreach (app(PackCollection::class)->filter->autoDiscovery as $pack) {
-                if ($path = $pack->lookup($this->name)) {
+                if ($pack->lookup($this->name)) {
                     $this->pack = $pack;
 
                     break;
@@ -116,26 +117,24 @@ class Svg implements Htmlable, Renderable
             throw SvgNotFoundException::create($this->name);
         }
 
-        $this->contents = StaticCache::once(static::class . '@' . $this->id() . '-' . $path, function () use ($path) {
-            return file_get_contents($path);
-        });
+        $this->contents = StaticCache::once(static::class.'@'.$this->id().'-'.$path, fn () => file_get_contents($path));
     }
 
-    public function inner()
+    public function inner(): string
     {
         $this->ensureRendered();
 
         return InnerParser::parse($this);
     }
 
-    public function viewBox()
+    public function viewBox(): array
     {
         $this->ensureRendered();
 
         return ViewboxParser::parse($this);
     }
 
-    private function sizingAttributes()
+    private function sizingAttributes(): string
     {
         $this->ensureRendered();
 
@@ -147,7 +146,7 @@ class Svg implements Htmlable, Renderable
 
         [$width, $height] = [$svgDom->getAttribute('width'), $svgDom->getAttribute('height')];
 
-        return ($width ? sprintf(' width="%s"', $width) : null) . ($height ? sprintf(' height="%s"', $height) : null);
+        return ($width ? sprintf(' width="%s"', $width) : null).($height ? sprintf(' height="%s"', $height) : null);
     }
 
     private function renderAttributes()
@@ -160,9 +159,7 @@ class Svg implements Htmlable, Renderable
         ])
             ->pipe(function (Collection $collection) {
                 return $collection->merge(
-                    $this->attributes->map(function ($value, $key) use ($collection) {
-                        return trim($collection->get($key) . ' ' . $value);
-                    })
+                    $this->attributes->map(fn ($value, $key) => trim($collection->get($key).' '.$value))
                 );
             })
             ->filter()
@@ -177,7 +174,7 @@ class Svg implements Htmlable, Renderable
             ->implode(' ');
     }
 
-    private function ensureRendered()
+    private function ensureRendered(): void
     {
         if (empty($this->contents)) {
             throw SvgMustBeRendered::create($this);

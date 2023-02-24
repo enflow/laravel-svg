@@ -11,15 +11,13 @@ class SvgServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/svg.php' => config_path('svg.php'),
+            __DIR__.'/../config/svg.php' => config_path('svg.php'),
         ]);
-        $this->mergeConfigFrom(__DIR__ . '/../config/svg.php', 'svg');
+        $this->mergeConfigFrom(__DIR__.'/../config/svg.php', 'svg');
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'svg');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'svg');
 
-        $this->app->singleton(PackCollection::class, function () {
-            return PackCollection::fromConfig(config('svg.packs', []));
-        });
+        $this->app->singleton(PackCollection::class, fn () => PackCollection::fromConfig(config('svg.packs', [])));
         $this->app->singleton(Spritesheet::class);
 
         $this->registerMiddleware();

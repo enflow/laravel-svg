@@ -3,10 +3,11 @@
 namespace Enflow\Svg\Test;
 
 use Enflow\Svg\Spritesheet;
+use Spatie\Snapshots\MatchesSnapshots;
 
 class SpritesheetTest extends TestCase
 {
-    use Snapshots;
+    use MatchesSnapshots;
 
     public function test_spritesheet()
     {

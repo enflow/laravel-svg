@@ -8,7 +8,7 @@ class ViewboxParser
 {
     public static function parse(Svg $svg)
     {
-        return StaticCache::once(static::class . '@parse' . $svg->id(), function () use ($svg) {
+        return StaticCache::once(static::class.'@parse'.$svg->id(), function () use ($svg) {
             $viewBox = DomParser::node($svg)->getAttribute('viewBox');
 
             $viewBoxParts = array_map('intval', explode(' ', $viewBox));
