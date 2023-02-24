@@ -24,7 +24,9 @@ class Spritesheet extends Collection implements Htmlable
     public function toHtml(): HtmlString
     {
         // Regex ported from https://github.com/Hedronium/SpacelessBlade/blob/master/src/SpacelessBladeProvider.php
-        return new HtmlString(preg_replace('/>\\s+</', '><', view('svg::spritesheet', ['spritesheet' => $this])->render()));
+        return new HtmlString(preg_replace('/>\\s+</', '><', view('svg::spritesheet', [
+            'spritesheet' => $this,
+        ])->render()));
     }
 
     public function toStylesheet(): HtmlString

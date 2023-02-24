@@ -4,12 +4,12 @@ namespace Enflow\Svg\Test;
 
 use Enflow\Svg\Exceptions\SvgMustBeRendered;
 use Enflow\Svg\Exceptions\SvgNotFoundException;
-use Enflow\Svg\Spritesheet;
 use Enflow\Svg\Svg;
+use Spatie\Snapshots\MatchesSnapshots;
 
 class SvgTest extends TestCase
 {
-    use Snapshots;
+    use MatchesSnapshots;
 
     protected array $packs = [
         'custom' => __DIR__ . '/fixtures/custom',

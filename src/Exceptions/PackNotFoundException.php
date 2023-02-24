@@ -7,7 +7,7 @@ use Exception;
 
 class PackNotFoundException extends Exception implements SvgException
 {
-    public static function create(string $name)
+    public static function create(string $name): self
     {
         $packs = app(PackCollection::class)->keys()->join(', ', ' and ');
 

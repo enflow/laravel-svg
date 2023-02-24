@@ -7,7 +7,7 @@ use Exception;
 
 class SvgMustBeRendered extends Exception implements SvgException
 {
-    public static function create(Svg $svg)
+    public static function create(Svg $svg): self
     {
         return new static("Svg '{$svg->name}' must be rendered before using this method.");
     }

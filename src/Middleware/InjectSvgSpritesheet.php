@@ -6,16 +6,14 @@ use Closure;
 use Enflow\Svg\Spritesheet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as SymfonyBaseResponse;
 
 class InjectSvgSpritesheet
 {
-    private Spritesheet $spritesheet;
-
-    public function __construct(Spritesheet $spritesheet)
+    public function __construct(private Spritesheet $spritesheet)
     {
-        $this->spritesheet = $spritesheet;
     }
 
     public function handle(Request $request, Closure $next)
@@ -70,7 +68,7 @@ class InjectSvgSpritesheet
         return $response;
     }
 
-    private function stylesheet()
+    private function stylesheet(): HtmlString
     {
         return $this->spritesheet->toStylesheet();
     }

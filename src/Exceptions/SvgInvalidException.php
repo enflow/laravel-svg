@@ -7,7 +7,7 @@ use Exception;
 
 class SvgInvalidException extends Exception implements SvgException
 {
-    public static function viewportInvalid(Svg $svg, string $viewPort)
+    public static function viewportInvalid(Svg $svg, string $viewPort): self
     {
         $viewPort = empty($viewPort) ? 'empty' : $viewPort;
 
