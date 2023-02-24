@@ -18,7 +18,7 @@ class Spritesheet extends Collection implements Htmlable
 
     public function __toString()
     {
-        throw new LogicException("Spritesheet __toString disabled. Specify `toHtml` or `toStylesheet` manually");
+        throw new LogicException('Spritesheet __toString disabled. Specify `toHtml` or `toStylesheet` manually');
     }
 
     public function toHtml(): HtmlString

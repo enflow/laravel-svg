@@ -7,9 +7,9 @@ use Orchestra\Testbench\TestCase as TestbenchTestCase;
 abstract class TestCase extends TestbenchTestCase
 {
     protected array $packs = [
-        'custom' => __DIR__ . '/fixtures/custom',
+        'custom' => __DIR__.'/fixtures/custom',
         'icons' => [
-            'path' => __DIR__ . '/fixtures/icons',
+            'path' => __DIR__.'/fixtures/icons',
             'auto_size_on_viewbox' => true,
         ],
     ];

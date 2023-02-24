@@ -12,14 +12,14 @@ class SvgTest extends TestCase
     use MatchesSnapshots;
 
     protected array $packs = [
-        'custom' => __DIR__ . '/fixtures/custom',
+        'custom' => __DIR__.'/fixtures/custom',
         'auto-discovery-disabled' => [
-            'path' => __DIR__ . '/fixtures/icons',
+            'path' => __DIR__.'/fixtures/icons',
             'auto_size_on_viewbox' => true,
             'auto_discovery' => false,
         ],
         'icons' => [
-            'path' => __DIR__ . '/fixtures/icons',
+            'path' => __DIR__.'/fixtures/icons',
             'auto_size_on_viewbox' => true,
         ],
     ];
@@ -70,8 +70,8 @@ class SvgTest extends TestCase
         $svg = svg('clock');
 
         $this->assertEquals($svg->render(), $svg->toHtml());
-        $this->assertEquals($svg->toHtml(), (string)$svg);
-        $this->assertEquals($svg->render(), (string)$svg);
+        $this->assertEquals($svg->toHtml(), (string) $svg);
+        $this->assertEquals($svg->render(), (string) $svg);
     }
 
     public function test_that_every_render_is_the_same()
