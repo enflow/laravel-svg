@@ -12,9 +12,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyBaseResponse;
 
 class InjectSvgSpritesheet
 {
-    public function __construct(private Spritesheet $spritesheet)
-    {
-    }
+    public function __construct(private Spritesheet $spritesheet) {}
 
     public function handle(Request $request, Closure $next)
     {
