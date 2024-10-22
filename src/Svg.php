@@ -27,7 +27,7 @@ class Svg implements Htmlable, Renderable
 
         // Automatically inline SVGs in Ajax requests or Livewire requests, as the spritesheet isn't up-to-date then.
         if (config('svg.inline_for_ajax', true)) {
-            $this->inline(Request::ajax() || Request::header('x-livewire'));
+            $this->inline(Request::ajax() || Request::hasHeader('x-livewire'));
         }
     }
 
