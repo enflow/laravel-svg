@@ -153,10 +153,11 @@ class Svg implements Htmlable, Renderable
     {
         return collect([
             'class' => $this->pack->autoSizeOnViewBox ? 'svg-auto-size' : null,
-            'aria-hidden' => 'true',
             'focusable' => 'false',
             'role' => 'img',
         ])
+            // When no `title` attribute is set, we hide it from screen readers by default.
+            ->when(! $this->attributes->get('title'), fn(Collection $collection) => $collection->put('aria-hidden', 'true'))
             ->pipe(function (Collection $collection) {
                 return $collection->merge(
                     $this->attributes->map(fn ($value, $key) => trim($collection->get($key).' '.$value))
