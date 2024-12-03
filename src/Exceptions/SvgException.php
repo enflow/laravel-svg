@@ -2,6 +2,4 @@
 
 namespace Enflow\Svg\Exceptions;
 
-interface SvgException
-{
-}
+interface SvgException {}
