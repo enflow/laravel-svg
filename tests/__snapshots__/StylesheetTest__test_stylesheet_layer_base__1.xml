@@ -1,4 +1,2 @@
 <?xml version="1.0"?>
-<style id="svg-stylesheet">
-        @layer base { .svg-auto-size {display: inline-block;font-size: inherit;height: 1em;overflow: visible;vertical-align: -.125em; } }
-    </style>
+<style id="svg-stylesheet">@layer base{.svg-auto-size{display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em}}</style>

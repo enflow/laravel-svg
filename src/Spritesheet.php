@@ -31,6 +31,21 @@ class Spritesheet extends Collection implements Htmlable
 
     public function toStylesheet(): HtmlString
     {
-        return new HtmlString(preg_replace('/>\\s+</', '><', view('svg::stylesheet')->render()));
+        $css = view('svg::stylesheet')->render();
+
+        $minified = preg_replace(
+            [
+                '/>\s+</',              // collapse whitespace between tags
+                '/\R+/',                // remove line breaks
+                '/\s{2,}/',             // collapse multiple spaces
+                '~\s*([{}:;,])\s*~',    // trim spaces around CSS punctuation
+                '/;(?=\s*})/',          // drop trailing semicolons before }
+                '/(<style[^>]*>)\s+/',  // remove space right after <style ...>
+            ],
+            ['><', ' ', ' ', '$1', '', '$1'],
+            trim($css)
+        );
+
+        return new HtmlString($minified);
     }
 }
