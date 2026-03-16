@@ -6,8 +6,14 @@ use Exception;
 
 class SvgNotFoundException extends Exception implements SvgException
 {
-    public static function create(string $name): self
+    public static function create(string $name, array $suggestions = []): self
     {
-        return new static("SVG '{$name}' could not be found.");
+        $message = "SVG '{$name}' could not be found.";
+
+        if (! empty($suggestions)) {
+            $message .= ' Did you mean: '.implode(', ', array_map(fn (string $s) => "'{$s}'", $suggestions)).'?';
+        }
+
+        return new static($message);
     }
 }

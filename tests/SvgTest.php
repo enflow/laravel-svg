@@ -99,6 +99,14 @@ class SvgTest extends TestCase
         svg('non-existing')->toHtml();
     }
 
+    public function test_exception_suggests_similar_icons()
+    {
+        $this->expectException(SvgNotFoundException::class);
+        $this->expectExceptionMessage("Did you mean: 'clock'");
+
+        svg('clok')->toHtml();
+    }
+
     public function test_exception_when_using_viewbox_method_without_rendering()
     {
         $this->expectException(SvgMustBeRendered::class);

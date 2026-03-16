@@ -114,10 +114,28 @@ class Svg implements Htmlable, Renderable
         }
 
         if (empty($this->pack) || ! ($path = $this->pack->lookup($this->name))) {
-            throw SvgNotFoundException::create($this->name);
+            throw SvgNotFoundException::create($this->name, $this->findSuggestions());
         }
 
         $this->contents = StaticCache::once(static::class.'@'.$this->id().'-'.$path, fn () => file_get_contents($path));
+    }
+
+    private function findSuggestions(): array
+    {
+        $packs = $this->pack
+            ? collect([$this->pack])
+            : app(PackCollection::class)->filter->autoDiscovery;
+
+        $allIcons = collect($packs)->flatMap->availableIcons()->unique()->values();
+
+        return $allIcons
+            ->map(fn (string $icon) => ['name' => $icon, 'distance' => levenshtein($this->name, $icon)])
+            ->filter(fn (array $item) => $item['distance'] <= max(3, (int) (strlen($this->name) * 0.5)))
+            ->sortBy('distance')
+            ->pluck('name')
+            ->values()
+            ->take(3)
+            ->all();
     }
 
     public function inner(): string

@@ -30,4 +30,30 @@ class Pack
                 ->first(fn ($filePath) => file_exists($filePath));
         });
     }
+
+    /**
+     * @return array<string>
+     */
+    public function availableIcons(): array
+    {
+        return StaticCache::once(static::class.'@availableIcons-'.$this->name, function () {
+            return collect($this->paths)
+                ->flatMap(function (string $path) {
+                    $path = rtrim($path, '/');
+
+                    if (! is_dir($path)) {
+                        return [];
+                    }
+
+                    return collect(scandir($path))
+                        ->filter(fn (string $file) => str_ends_with($file, '.svg'))
+                        ->map(fn (string $file) => substr($file, 0, -4))
+                        ->values()
+                        ->all();
+                })
+                ->unique()
+                ->values()
+                ->all();
+        });
+    }
 }
