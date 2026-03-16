@@ -2,6 +2,7 @@
 
 namespace Enflow\Svg\Test;
 
+use Enflow\Svg\SvgServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 
 abstract class TestCase extends TestbenchTestCase
@@ -17,7 +18,7 @@ abstract class TestCase extends TestbenchTestCase
     protected function getPackageProviders($app)
     {
         return [
-            \Enflow\Svg\SvgServiceProvider::class,
+            SvgServiceProvider::class,
         ];
     }
 
